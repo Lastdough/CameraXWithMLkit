@@ -1,0 +1,4 @@
+<resources>
+    <string name="app_name">CameraXWithMLkit</string>
+    <string name="decoded_text">Decoded Text</string>
+</resources>
