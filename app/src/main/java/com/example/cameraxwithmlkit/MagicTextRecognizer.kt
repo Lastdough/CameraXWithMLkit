@@ -25,15 +25,40 @@ class MagicTextRecognizer(private val onTextFound: (String) -> Unit) {
     }
 
     private fun processTextFromImage(text: Text) {
+//        text.textBlocks.joinToString {
+////            it.lines[0].boundingBox.toString()
+////            it.text.lines().count()
+////            it.text.lines().joinToString(" ") + it.boundingBox.toString()
+//            getTitleFromImage(it).text
+//        }.let {
+//            if (it.isNotBlank()) {
+//                onTextFound(it)
+//            }
+//        }
+        if (text.textBlocks.isNotEmpty()){
+            onTextFound(getTitleFromImage(text).text)
+        }
+    }
 
-        text.textBlocks.joinToString {
-            it.text.lines().joinToString(" ")
-        }.let {
-            if (it.isNotBlank()) {
-                onTextFound(it)
+    private fun getTitleFromImage(text: Text): Text.Line {
+        var maxHeight = 0
+        var maxLine = text.textBlocks[0].lines[0]
 
+        for (block in text.textBlocks) {
+            for (line in block.lines) {
+                val lineText = line.text
+                val lineCornerPoints = line.cornerPoints
+                val lineHeight = line.boundingBox?.height()
+                if (lineHeight != null) {
+                    if (lineHeight > maxHeight){
+                        maxLine = line
+                        maxHeight = lineHeight
+                    }
+                }
             }
         }
+
+        return maxLine
     }
 
     companion object {
